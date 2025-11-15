@@ -1,0 +1,1 @@
+export { useGetAds } from './api';

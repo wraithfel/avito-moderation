@@ -1,0 +1,1 @@
+export { useGetCurrentModerator } from './api';

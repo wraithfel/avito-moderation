@@ -1,0 +1,73 @@
+.card {
+  display: flex;
+  gap: 16px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid rgb(var(--color-border-subtle));
+  background-color: rgb(var(--color-bg-elevated));
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.card:hover {
+  border-color: rgb(var(--color-cyan));
+  background-color: rgba(var(--color-bg-elevated), 0.98);
+}
+
+.card__main {
+  flex: 1;
+  min-width: 0;
+}
+
+.card__titleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.card__title {
+  font-size: 15px;
+  font-weight: 500;
+  color: rgb(var(--color-text-primary));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+  color: rgb(var(--color-text-secondary));
+  margin-bottom: 4px;
+}
+
+.card__description {
+  font-size: 13px;
+  color: rgb(var(--color-text-secondary));
+  max-height: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card__side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  min-width: 140px;
+}
+
+.card__price {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.card__seller {
+  font-size: 12px;
+  color: rgb(var(--color-text-secondary));
+}

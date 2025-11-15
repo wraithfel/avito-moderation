@@ -1,6 +1,6 @@
 import { Avatar, Skeleton } from '@mui/material';
 
-import { useGetCurrentModerator } from '@/entities/moderator/api';
+import { useGetCurrentModerator } from '@/entities/moderator';
 
 import styles from './header.module.scss';
 import { getInitials } from '@/shared/utils';

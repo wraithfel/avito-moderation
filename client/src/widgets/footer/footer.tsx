@@ -1,6 +1,5 @@
+import { getCurrentYear } from '@/shared/utils';
 import styles from './footer.module.scss';
-
-const currentYear = new Date().getFullYear();
 
 const Footer = () => {
   return (
@@ -8,7 +7,7 @@ const Footer = () => {
       <div className={styles.footer__inner}>
         <div className={styles.footer__left}>
           <span className={styles.footer__product}>Avito Moderation System</span>
-          <span className={styles.footer__copy}>© {currentYear}</span>
+          <span className={styles.footer__copy}>© {getCurrentYear()}</span>
         </div>
 
         <div className={styles.footer__right}>
