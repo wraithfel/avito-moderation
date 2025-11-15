@@ -41,7 +41,7 @@ const AdDetailsWidget = ({ adId }: AdDetailsWidgetProps) => {
     approveMutation.isPending || rejectMutation.isPending || requestChangesMutation.isPending;
 
   const handleBack = () => {
-    navigate(-1);
+    navigate('/list');
   };
 
   const handlePrev = () => {

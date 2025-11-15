@@ -26,11 +26,15 @@ export const ModerationDialog = ({
 }: ModerationDialogProps) => {
   const open = openMode !== null;
 
+  const isRejectMode = openMode === 'reject';
+  const isCommentRequired = isRejectMode;
+  const isCommentEmpty = !comment.trim();
+
+  const isSubmitDisabled = isMutating || !selectedReason || (isCommentRequired && isCommentEmpty);
+
   return (
     <Dialog open={open} onClose={() => !isMutating && onClose()} fullWidth maxWidth='sm'>
-      <DialogTitle>
-        {openMode === 'reject' ? 'Отклонить объявление' : 'Вернуть на доработку'}
-      </DialogTitle>
+      <DialogTitle>{isRejectMode ? 'Отклонить объявление' : 'Вернуть на доработку'}</DialogTitle>
       <DialogContent>
         <FormControl component='fieldset' sx={{ mt: 1 }}>
           <RadioGroup
@@ -53,7 +57,8 @@ export const ModerationDialog = ({
           fullWidth
           multiline
           minRows={3}
-          label='Комментарий (необязательно)'
+          label={isRejectMode ? 'Причина отклонения (обязательно)' : 'Комментарий (необязательно)'}
+          required={isRejectMode}
           value={comment}
           onChange={(e) => onCommentChange(e.target.value)}
         />
@@ -65,8 +70,8 @@ export const ModerationDialog = ({
         <Button
           onClick={onSubmit}
           variant='contained'
-          color={openMode === 'reject' ? 'error' : 'warning'}
-          disabled={isMutating || !selectedReason}
+          color={isRejectMode ? 'error' : 'warning'}
+          disabled={isSubmitDisabled}
         >
           Подтвердить
         </Button>
