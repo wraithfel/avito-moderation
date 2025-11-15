@@ -1,0 +1,112 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: rgb(var(--color-bg-elevated));
+  border-bottom: 1px solid rgb(var(--color-border-subtle));
+  backdrop-filter: blur(8px);
+}
+
+.header__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+/* Лого */
+
+.header__logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header__logoDots {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.header__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.header__dot_blue {
+  background-color: #5c9ce6;
+}
+
+.header__dot_red {
+  background-color: #ff6163;
+}
+
+.header__dot_green {
+  background-color: #45c778;
+}
+
+.header__logoTextBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.header__logoText {
+  font-family: var(--font-family-ternary);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.header__logoSub {
+  font-size: 12px;
+  color: rgb(var(--color-text-secondary));
+}
+
+.header__moderator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.header__avatar {
+  width: 36px;
+  height: 36px;
+  font-size: 14px;
+  font-weight: 600;
+  background-color: rgb(var(--color-cyan-dark));
+  color: rgb(var(--color-white));
+}
+
+.header__moderatorInfo {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.header__moderatorName {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgb(var(--color-text-primary));
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.header__moderatorRole {
+  font-size: 12px;
+  color: rgb(var(--color-text-secondary));
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.header__error {
+  font-size: 12px;
+  color: rgb(var(--color-red));
+}
