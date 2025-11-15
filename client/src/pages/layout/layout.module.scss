@@ -1,0 +1,16 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+  background-color: rgb(var(--color-bg-main));
+  color: rgb(var(--color-text-primary));
+}
+
+.layout__wrapper {
+  margin: 20px auto 15px;
+  max-width: 1200px;
+  min-height: calc(100vh - 140px);
+  padding: 0 20px 40px;
+  width: 100%;
+}
