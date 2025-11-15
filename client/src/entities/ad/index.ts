@@ -1,3 +1,3 @@
-export { useGetAds } from './api';
-export type { AdStatus, AdsListParams } from './model';
+export { useGetAds, useGetAd, useApproveAd, useRejectAd, useRequestChanges } from './api';
+export type { AdStatus, AdsListParams, Advertisement, ModerationPayload } from './model';
 export { AdCard } from './ui';

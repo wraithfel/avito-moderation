@@ -13,4 +13,11 @@ export const adQueries = {
       placeholderData: keepPreviousData,
       staleTime: 60 * 1000,
     }),
+
+  byId: (id: number) =>
+    queryOptions({
+      queryKey: [...adQueries.all(), 'detail', id],
+      queryFn: () => AdApiService.getAdById(id),
+      staleTime: 60 * 1000,
+    }),
 };

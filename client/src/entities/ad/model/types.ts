@@ -59,3 +59,13 @@ export interface AdsListParams {
   sortBy?: 'createdAt' | 'price' | 'priority';
   sortOrder?: 'asc' | 'desc';
 }
+
+export type ModerationPayload = {
+  reason: string;
+  comment?: string;
+};
+
+export type ModerationResponse = {
+  message: string;
+  ad: Advertisement;
+};
