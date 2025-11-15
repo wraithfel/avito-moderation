@@ -1,7 +1,8 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 import { LayoutApp } from '@/pages/layout';
-import { AdDetailsPageStub, AdsListPageStub, StatsPageStub } from './mock-components';
+import { AdDetailsPageStub, StatsPageStub } from './mock-components';
+import { AdsListPage } from '@/pages/ads-list';
 
 export const appRouter = createBrowserRouter([
   {
@@ -14,7 +15,7 @@ export const appRouter = createBrowserRouter([
       },
       {
         path: 'list',
-        element: <AdsListPageStub />,
+        element: <AdsListPage />,
       },
       {
         path: 'item/:id',

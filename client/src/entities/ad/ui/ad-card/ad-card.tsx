@@ -7,8 +7,17 @@ import type { AdCardProps } from './types';
 import { formatCurrency, formatDateTime } from '@/shared/utils';
 
 const AdCard = ({ ad }: AdCardProps) => {
+  const thumbnail =
+    ad.images?.[0] ??
+    `https://placehold.co/160x120/2b2b2b/8f8f8f?text=${encodeURIComponent(ad.category)}`;
+
   return (
-    <Paper className={styles.card} component={Link} to={`/item/${ad.id}`}>
+    <Paper className={styles.card} component={Link} to={`/item/${ad.id}`} elevation={1}>
+      <div className={styles.card__media}>
+        <img src={thumbnail} alt={ad.title} className={styles.card__image} loading='lazy' />
+        {ad.priority === 'urgent' && <span className={styles.card__priority}>Срочно</span>}
+      </div>
+
       <div className={styles.card__main}>
         <div className={styles.card__titleRow}>
           <span className={styles.card__title}>{ad.title}</span>
@@ -18,9 +27,6 @@ const AdCard = ({ ad }: AdCardProps) => {
             color={statusColor[ad.status]}
             variant='outlined'
           />
-          {ad.priority === 'urgent' && (
-            <Chip size='small' label='Срочно' color='error' variant='filled' />
-          )}
         </div>
 
         <div className={styles.card__meta}>

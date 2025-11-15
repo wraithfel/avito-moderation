@@ -9,7 +9,7 @@ export const AdsPagination = ({ page, totalPages, onChange }: AdsPaginationProps
       onChange={(_, value) => onChange(value)}
       color='primary'
       shape='rounded'
-      size='small'
+      size='medium'
     />
   );
 };
