@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+  server:
+    build:
+      context: ./tech-int3-server
+      dockerfile: Dockerfile
+    container_name: ams-server
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+    networks:
+      - ams-net
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: /api
+        VITE_API_VERSION: v1
+    container_name: ams-client
+    depends_on:
+      - server
+    ports:
+      - "8080:80"
+    networks:
+      - ams-net
+
+networks:
+  ams-net:
+    driver: bridge
