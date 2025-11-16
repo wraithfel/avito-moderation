@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, Box, CircularProgress, Snackbar } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 
-import { useGetAd, useApproveAd, useRejectAd, useRequestChanges } from '@/entities/ad';
+import { adQueries, useGetAd, useApproveAd, useRejectAd, useRequestChanges } from '@/entities/ad';
 import type { ModerationPayload } from '@/entities/ad';
 
 import styles from './ad-details-widget.module.scss';
@@ -23,6 +24,8 @@ import { ModerationDialog } from './moderation-dialog';
 
 const AdDetailsWidget = ({ adId }: AdDetailsWidgetProps) => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   const { data: ad, isLoading, isError, refetch } = useGetAd(adId);
 
   const [decisionDialogOpen, setDecisionDialogOpen] = useState<DecisionMode | null>(null);
@@ -36,6 +39,18 @@ const AdDetailsWidget = ({ adId }: AdDetailsWidgetProps) => {
   const approveMutation = useApproveAd(adId);
   const rejectMutation = useRejectAd(adId);
   const requestChangesMutation = useRequestChanges(adId);
+
+  // Префетчим предыдущее и следующее объявление
+  useEffect(() => {
+    const prevId = adId - 1;
+    const nextId = adId + 1;
+
+    if (prevId > 0) {
+      queryClient.prefetchQuery(adQueries.byId(prevId));
+    }
+
+    queryClient.prefetchQuery(adQueries.byId(nextId));
+  }, [adId, queryClient]);
 
   const isMutating =
     approveMutation.isPending || rejectMutation.isPending || requestChangesMutation.isPending;

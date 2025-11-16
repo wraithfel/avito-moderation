@@ -4,6 +4,7 @@ import { LayoutApp } from '@/pages/layout';
 import { AdsListPage } from '@/pages/ads-list';
 import { AdDetailsPage } from '@/pages/ad-detail';
 import { StatsPage } from '@/pages/stats';
+import { NotFoundPage } from '@/pages/not-found-page';
 
 export const appRouter = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ export const appRouter = createBrowserRouter([
       {
         path: 'stats',
         element: <StatsPage />,
+      },
+      {
+        path: '*',
+        element: <NotFoundPage />,
       },
     ],
   },

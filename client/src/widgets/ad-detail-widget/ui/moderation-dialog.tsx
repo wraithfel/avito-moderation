@@ -53,6 +53,8 @@ export const ModerationDialog = ({
         </FormControl>
 
         <TextField
+          id='moderation-comment'
+          name='moderationComment'
           sx={{ mt: 2 }}
           fullWidth
           multiline
