@@ -6,8 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint . --ext .ts,.tsx --report-unused-disable-directives --max-warnings=0",
+    "lint:fix": "npm run lint -- --fix",
+    "format": "prettier \"src/**/*.{ts,tsx,js,jsx,json,css,md}\" --check",
+    "format:fix": "prettier \"src/**/*.{ts,tsx,js,jsx,json,css,md}\" --write"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

@@ -1,1 +1,7 @@
-export type { AdStatus, AdsListParams, Advertisement, ModerationPayload } from './types';
+export type {
+  AdStatus,
+  AdsListParams,
+  Advertisement,
+  ModerationPayload,
+  ModerationResponse,
+} from './types';

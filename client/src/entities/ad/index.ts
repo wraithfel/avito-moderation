@@ -7,5 +7,12 @@ export {
   useRequestChanges,
 } from './api';
 
-export type { AdStatus, AdsListParams, Advertisement, ModerationPayload } from './model';
+export type {
+  AdStatus,
+  AdsListParams,
+  Advertisement,
+  ModerationPayload,
+  ModerationResponse,
+} from './model';
+
 export { AdCard } from './ui';

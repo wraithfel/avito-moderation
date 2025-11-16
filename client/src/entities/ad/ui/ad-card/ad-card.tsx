@@ -1,4 +1,4 @@
-import { Chip, Paper } from '@mui/material';
+import { Checkbox, Chip, Paper } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 import styles from './ad-card.module.scss';
@@ -6,13 +6,25 @@ import { statusColor, statusLabel } from './constants';
 import type { AdCardProps } from './types';
 import { formatCurrency, formatDateTime } from '@/shared/utils';
 
-const AdCard = ({ ad }: AdCardProps) => {
+const AdCard = ({ ad, selectable = false, selected = false, onSelectChange }: AdCardProps) => {
   const thumbnail =
     ad.images?.[0] ??
     `https://placehold.co/160x120/2b2b2b/8f8f8f?text=${encodeURIComponent(ad.category)}`;
 
+  const handleCheckboxClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    onSelectChange?.(!selected);
+  };
+
   return (
     <Paper className={styles.card} component={Link} to={`/item/${ad.id}`} elevation={1}>
+      {selectable && (
+        <div className={styles.card__checkbox}>
+          <Checkbox checked={selected} size='small' tabIndex={0} onClick={handleCheckboxClick} />
+        </div>
+      )}
+
       <div className={styles.card__media}>
         <img src={thumbnail} alt={ad.title} className={styles.card__image} loading='lazy' />
         {ad.priority === 'urgent' && <span className={styles.card__priority}>Срочно</span>}
