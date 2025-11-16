@@ -1,5 +1,21 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Alert, Box, CircularProgress, Stack, Typography } from '@mui/material';
+import {
+  Alert,
+  Box,
+  CircularProgress,
+  Stack,
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  FormControl,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  TextField,
+  Button,
+} from '@mui/material';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { AdCard, adQueries, useGetAds } from '@/entities/ad';
@@ -7,7 +23,9 @@ import { AdFilters, useAdsFilters, mapFiltersToParams } from '@/features/ad-filt
 import { AdsPagination } from '@/features/ad-pagination';
 import { useAdSelection, BulkSelectionBar } from '@/features/ad-selection';
 import { api } from '@/shared/api';
-import type { ModerationResponse } from '@/entities/ad';
+import type { ModerationResponse, ModerationPayload } from '@/entities/ad';
+import { MODERATION_REASONS } from '@widgets/ad-detail-widget/model/constants';
+import type { ModerationReason } from '@widgets/ad-detail-widget/model/types';
 
 import styles from './ads-list-widget.module.scss';
 
@@ -20,6 +38,10 @@ const AdsListWidget = () => {
   const queryClient = useQueryClient();
   const { selectedIds, setSelected, reset: resetSelection, isSelected } = useAdSelection();
   const [isBulkLoading, setIsBulkLoading] = useState(false);
+
+  const [isBulkDialogOpen, setIsBulkDialogOpen] = useState(false);
+  const [bulkReason, setBulkReason] = useState<ModerationReason>('Запрещенный товар');
+  const [bulkComment, setBulkComment] = useState('');
 
   const params = useMemo(() => mapFiltersToParams(filters, page, PAGE_LIMIT), [filters, page]);
 
@@ -52,7 +74,10 @@ const AdsListWidget = () => {
     (filters.minPrice !== null ? 1 : 0) +
     (filters.maxPrice !== null ? 1 : 0);
 
-  const handleBulkModeration = async (action: 'approve' | 'reject') => {
+  const handleBulkModeration = async (
+    action: 'approve' | 'reject',
+    payload?: ModerationPayload,
+  ) => {
     if (selectedIds.length === 0) {
       return;
     }
@@ -64,17 +89,18 @@ const AdsListWidget = () => {
       const results = await Promise.all(
         selectedIds.map(async (id) => {
           try {
-            const response = await api.post<ModerationResponse>(
-              `/ads/${id}/${endpoint}`,
+            const body =
               action === 'reject'
-                ? {
+                ? (payload ??
+                  ({
                     reason: 'Другое',
                     comment: 'Массовое отклонение модератором',
-                  }
-                : undefined,
-            );
+                  } satisfies ModerationPayload))
+                : undefined;
 
+            const response = await api.post<ModerationResponse>(`/ads/${id}/${endpoint}`, body);
             const updatedAd = response.data.ad;
+
             const detailQuery = adQueries.byId(updatedAd.id);
             queryClient.setQueryData(detailQuery.queryKey, updatedAd);
 
@@ -100,7 +126,26 @@ const AdsListWidget = () => {
   };
 
   const handleBulkReject = () => {
-    void handleBulkModeration('reject');
+    if (selectedIds.length === 0) return;
+
+    setBulkReason('Запрещенный товар');
+    setBulkComment('');
+    setIsBulkDialogOpen(true);
+  };
+
+  const handleBulkRejectConfirm = async () => {
+    if (selectedIds.length === 0) {
+      setIsBulkDialogOpen(false);
+      return;
+    }
+
+    const payload: ModerationPayload = {
+      reason: bulkReason,
+      comment: bulkComment.trim() || undefined,
+    };
+
+    await handleBulkModeration('reject', payload);
+    setIsBulkDialogOpen(false);
   };
 
   useEffect(() => {
@@ -230,6 +275,63 @@ const AdsListWidget = () => {
           )}
         </>
       )}
+
+      <Dialog
+        open={isBulkDialogOpen}
+        onClose={() => !isBulkLoading && setIsBulkDialogOpen(false)}
+        fullWidth
+        maxWidth='sm'
+      >
+        <DialogTitle>Отклонить выбранные объявления</DialogTitle>
+        <DialogContent>
+          <Typography variant='body2' sx={{ mb: 1 }}>
+            Вы выбрали {selectedIds.length} объявлений. Укажите причину отклонения и комментарий —
+            он будет применён ко всем выбранным объявлениям.
+          </Typography>
+
+          <FormControl component='fieldset' sx={{ mt: 1 }}>
+            <RadioGroup
+              value={bulkReason}
+              onChange={(e) => setBulkReason(e.target.value as ModerationReason)}
+            >
+              {MODERATION_REASONS.map((reason) => (
+                <FormControlLabel
+                  key={reason}
+                  value={reason}
+                  control={<Radio size='small' />}
+                  label={reason}
+                />
+              ))}
+            </RadioGroup>
+          </FormControl>
+
+          <TextField
+            id='bulk-moderation-comment'
+            name='bulkModerationComment'
+            sx={{ mt: 2 }}
+            fullWidth
+            multiline
+            minRows={3}
+            label='Комментарий для продавца (обязательно)'
+            required
+            value={bulkComment}
+            onChange={(e) => setBulkComment(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsBulkDialogOpen(false)} disabled={isBulkLoading}>
+            Отмена
+          </Button>
+          <Button
+            onClick={() => void handleBulkRejectConfirm()}
+            variant='contained'
+            color='error'
+            disabled={isBulkLoading || !bulkComment.trim()}
+          >
+            Отклонить {selectedIds.length}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </section>
   );
 };

@@ -19,13 +19,31 @@ const AdCard = ({ ad, selectable = false, selected = false, onSelectChange }: Ad
 
   return (
     <Paper className={styles.card} component={Link} to={`/item/${ad.id}`} elevation={1}>
-      {selectable && (
-        <div className={styles.card__checkbox}>
-          <Checkbox checked={selected} size='small' tabIndex={0} onClick={handleCheckboxClick} />
-        </div>
-      )}
-
       <div className={styles.card__media}>
+        {selectable && (
+          <div className={styles.card__checkbox}>
+            <Checkbox
+              checked={selected}
+              size='small'
+              tabIndex={0}
+              onClick={handleCheckboxClick}
+              sx={{
+                padding: 0.5,
+                '&:hover': {
+                  backgroundColor: 'transparent',
+                },
+                '& .MuiSvgIcon-root': {
+                  fontSize: 20,
+                  color: 'rgb(var(--color-black))',
+                },
+                '&.Mui-checked .MuiSvgIcon-root': {
+                  color: 'rgb(var(--color-green))',
+                },
+              }}
+            />
+          </div>
+        )}
+
         <img src={thumbnail} alt={ad.title} className={styles.card__image} loading='lazy' />
         {ad.priority === 'urgent' && <span className={styles.card__priority}>Срочно</span>}
       </div>
