@@ -84,6 +84,8 @@ const AdFilters = ({ filters, onChange, onReset, totalItems, categories }: AdFil
       <div className={styles.filters__row}>
         <TextField
           className={styles.filters__search}
+          id='search'
+          name='search'
           size='small'
           variant='outlined'
           label='Поиск по названию'
@@ -113,29 +115,36 @@ const AdFilters = ({ filters, onChange, onReset, totalItems, categories }: AdFil
       <div className={styles.filters__row}>
         <div className={styles.filters__priceGroup}>
           <TextField
+            id='price-min'
+            name='priceMin'
             size='small'
             type='number'
             variant='outlined'
             label='Цена от'
             value={filters.minPrice ?? ''}
             onChange={handleMinPriceChange}
-            inputProps={{ min: 0 }}
           />
+
           <TextField
+            id='price-max'
+            name='priceMax'
             size='small'
             type='number'
             variant='outlined'
             label='Цена до'
             value={filters.maxPrice ?? ''}
             onChange={handleMaxPriceChange}
-            inputProps={{ min: 0 }}
           />
         </div>
 
         <FormControl size='small' sx={{ minWidth: 180 }}>
-          <InputLabel id='category-filter-label'>Категория</InputLabel>
+          <InputLabel id='category-label' htmlFor='category-select'>
+            Категория
+          </InputLabel>
           <Select
-            labelId='category-filter-label'
+            id='category-select'
+            name='categoryId'
+            labelId='category-label'
             label='Категория'
             value={filters.categoryId !== null ? String(filters.categoryId) : ''}
             onChange={handleCategoryChange}
@@ -152,8 +161,12 @@ const AdFilters = ({ filters, onChange, onReset, totalItems, categories }: AdFil
         </FormControl>
 
         <FormControl size='small' sx={{ minWidth: 180 }}>
-          <InputLabel id='sort-by-label'>Сортировка</InputLabel>
+          <InputLabel id='sort-by-label' htmlFor='sort-by-select'>
+            Сортировка
+          </InputLabel>
           <Select
+            id='sort-by-select'
+            name='sortBy'
             labelId='sort-by-label'
             label='Сортировка'
             value={filters.sortBy}
