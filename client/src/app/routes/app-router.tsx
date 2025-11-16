@@ -1,8 +1,10 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 import { LayoutApp } from '@/pages/layout';
-import { AdDetailsPageStub, StatsPageStub } from './mock-components';
 import { AdsListPage } from '@/pages/ads-list';
+import { AdDetailsPage } from '@/pages/ad-detail';
+import { StatsPage } from '@/pages/stats';
+import { NotFoundPage } from '@/pages/not-found-page';
 
 export const appRouter = createBrowserRouter([
   {
@@ -19,11 +21,15 @@ export const appRouter = createBrowserRouter([
       },
       {
         path: 'item/:id',
-        element: <AdDetailsPageStub />,
+        element: <AdDetailsPage />,
       },
       {
         path: 'stats',
-        element: <StatsPageStub />,
+        element: <StatsPage />,
+      },
+      {
+        path: '*',
+        element: <NotFoundPage />,
       },
     ],
   },

@@ -1,0 +1,133 @@
+.stats {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stats__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.stats__title {
+  font-size: 20px;
+  font-weight: 600;
+  color: rgb(var(--color-text-primary));
+}
+
+.stats__subtitle {
+  margin-top: 4px;
+  font-size: 13px;
+  color: rgb(var(--color-text-secondary));
+}
+
+.stats__controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.stats__periodLabel {
+  font-size: 13px;
+  color: rgb(var(--color-text-secondary));
+}
+
+.stats__cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.stats__card {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgb(var(--color-border-subtle));
+  background-color: rgb(var(--color-bg-elevated));
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stats__cardTitle {
+  font-size: 12px;
+  color: rgb(var(--color-text-secondary));
+}
+
+.stats__cardValue {
+  font-size: 20px;
+  font-weight: 600;
+  color: rgb(var(--color-text-primary));
+}
+
+.stats__cardHint {
+  font-size: 12px;
+  color: rgb(var(--color-text-secondary));
+}
+
+.stats__chartsRow {
+  display: grid;
+  grid-template-columns: 2fr 1.2fr;
+  gap: 16px;
+}
+
+.stats__chartCard {
+  border-radius: 8px;
+  border: 1px solid rgb(var(--color-border-subtle));
+  background-color: rgb(var(--color-bg-elevated));
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 220px;
+}
+
+.stats__chartTitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgb(var(--color-text-primary));
+}
+
+.stats__chartBody {
+  flex: 1;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stats__chartEmpty {
+  text-align: center;
+}
+
+@media (max-width: 1024px) {
+  .stats__cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stats__chartsRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .stats__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .stats__cards {
+    grid-template-columns: 1fr;
+  }
+
+  .stats__controls {
+    align-self: flex-start;
+  }
+
+  .stats__chartCard {
+    padding: 10px;
+  }
+}

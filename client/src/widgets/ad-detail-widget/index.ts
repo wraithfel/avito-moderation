@@ -1,0 +1,1 @@
+export { AdDetailsWidget } from './ui';
