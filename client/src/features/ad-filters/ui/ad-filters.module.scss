@@ -40,6 +40,14 @@
   white-space: nowrap;
 }
 
+.filters__presets {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
 @media (max-width: 900px) {
   .filters__row {
     flex-direction: column;
@@ -58,5 +66,10 @@
 
   .filters__search {
     min-width: 0;
+  }
+
+  .filters__presets {
+    flex-direction: column;
+    align-items: stretch;
   }
 }
