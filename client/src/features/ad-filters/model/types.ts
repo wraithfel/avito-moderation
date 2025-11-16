@@ -24,4 +24,5 @@ export interface AdFiltersProps {
   onReset: () => void;
   totalItems?: number;
   categories?: CategoryOption[];
+  searchInputRef?: React.RefObject<HTMLInputElement | null>;
 }

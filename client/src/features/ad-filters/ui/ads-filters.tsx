@@ -23,7 +23,14 @@ import {
 
 import styles from './ad-filters.module.scss';
 
-const AdFilters = ({ filters, onChange, onReset, totalItems, categories }: AdFiltersProps) => {
+const AdFilters = ({
+  filters,
+  onChange,
+  onReset,
+  totalItems,
+  categories,
+  searchInputRef,
+}: AdFiltersProps) => {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChange({ search: event.target.value });
   };
@@ -92,6 +99,7 @@ const AdFilters = ({ filters, onChange, onReset, totalItems, categories }: AdFil
           placeholder='Например, iPhone 13'
           value={filters.search}
           onChange={handleSearchChange}
+          inputRef={searchInputRef}
         />
 
         <div className={styles.filters__chips}>

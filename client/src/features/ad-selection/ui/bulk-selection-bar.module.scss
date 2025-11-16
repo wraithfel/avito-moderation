@@ -1,0 +1,27 @@
+.bulkBar {
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgb(var(--color-border-subtle));
+  background-color: rgb(var(--color-bg-elevated));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.bulkBar__info {
+  font-size: 13px;
+  color: rgb(var(--color-text-secondary));
+}
+
+.bulkBar__count {
+  font-weight: 600;
+  color: rgb(var(--color-text-primary));
+}
+
+.bulkBar__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}

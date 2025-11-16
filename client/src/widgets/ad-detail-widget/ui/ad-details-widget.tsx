@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Alert, Box, CircularProgress, Snackbar } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
@@ -40,7 +40,6 @@ const AdDetailsWidget = ({ adId }: AdDetailsWidgetProps) => {
   const rejectMutation = useRejectAd(adId);
   const requestChangesMutation = useRequestChanges(adId);
 
-  // Префетчим предыдущее и следующее объявление
   useEffect(() => {
     const prevId = adId - 1;
     const nextId = adId + 1;
@@ -55,34 +54,34 @@ const AdDetailsWidget = ({ adId }: AdDetailsWidgetProps) => {
   const isMutating =
     approveMutation.isPending || rejectMutation.isPending || requestChangesMutation.isPending;
 
-  const handleBack = () => {
+  const handleBack = useCallback(() => {
     navigate('/list');
-  };
+  }, [navigate]);
 
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     if (adId > 1) {
       navigate(`/item/${adId - 1}`);
     }
-  };
+  }, [adId, navigate]);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     navigate(`/item/${adId + 1}`);
-  };
+  }, [adId, navigate]);
 
-  const handleApprove = async () => {
+  const handleApprove = useCallback(async () => {
     try {
       await approveMutation.mutateAsync();
       setSnackbar({ open: true, message: 'Объявление одобрено' });
     } catch {
       setSnackbar({ open: true, message: 'Не удалось одобрить объявление' });
     }
-  };
+  }, [approveMutation]);
 
-  const handleOpenDecisionDialog = (mode: DecisionMode) => {
+  const handleOpenDecisionDialog = useCallback((mode: DecisionMode) => {
     setDecisionDialogOpen(mode);
     setSelectedReason('Запрещенный товар');
     setComment('');
-  };
+  }, []);
 
   const handleDecisionSubmit = async () => {
     if (!decisionDialogOpen) return;
@@ -108,6 +107,40 @@ const AdDetailsWidget = ({ adId }: AdDetailsWidgetProps) => {
       });
     }
   };
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      const tagName = target?.tagName.toLowerCase();
+
+      if (tagName === 'input' || tagName === 'textarea' || target?.isContentEditable) {
+        return;
+      }
+
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        handlePrev();
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        handleNext();
+      } else if (event.key === 'a' || event.key === 'A') {
+        event.preventDefault();
+        if (!isMutating) {
+          void handleApprove();
+        }
+      } else if (event.key === 'd' || event.key === 'D') {
+        event.preventDefault();
+        if (!isMutating) {
+          handleOpenDecisionDialog('reject');
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handlePrev, handleNext, handleApprove, handleOpenDecisionDialog, isMutating]);
 
   if (isLoading) {
     return (
