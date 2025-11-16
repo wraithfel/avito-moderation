@@ -1,1 +1,1 @@
-export { theme } from './theme-config';
+export { theme, type ThemeMode, createAppTheme } from './theme-config';
