@@ -6,7 +6,13 @@ import { statusColor, statusLabel } from './constants';
 import type { AdCardProps } from './types';
 import { formatCurrency, formatDateTime } from '@/shared/utils';
 
-const AdCard = ({ ad, selectable = false, selected = false, onSelectChange }: AdCardProps) => {
+const AdCard = ({
+  ad,
+  selectable = false,
+  selected = false,
+  onSelectChange,
+  style,
+}: AdCardProps) => {
   const thumbnail =
     ad.images?.[0] ??
     `https://placehold.co/160x120/2b2b2b/8f8f8f?text=${encodeURIComponent(ad.category)}`;
@@ -18,7 +24,13 @@ const AdCard = ({ ad, selectable = false, selected = false, onSelectChange }: Ad
   };
 
   return (
-    <Paper className={styles.card} component={Link} to={`/item/${ad.id}`} elevation={1}>
+    <Paper
+      className={styles.card}
+      component={Link}
+      to={`/item/${ad.id}`}
+      elevation={1}
+      style={style}
+    >
       <div className={styles.card__media}>
         {selectable && (
           <div className={styles.card__checkbox}>

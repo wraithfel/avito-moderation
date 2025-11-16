@@ -241,13 +241,14 @@ const AdsListWidget = () => {
           ) : (
             <div className={styles.list__body}>
               <Stack spacing={1}>
-                {ads.map((ad) => (
+                {ads.map((ad, index) => (
                   <AdCard
                     key={ad.id}
                     ad={ad}
                     selectable
                     selected={isSelected(ad.id)}
                     onSelectChange={(value) => setSelected(ad.id, value)}
+                    style={{ animationDelay: `${index * 40}ms` }}
                   />
                 ))}
               </Stack>
