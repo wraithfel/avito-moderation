@@ -15,7 +15,6 @@ export interface DecisionsItem {
   name: string;
   key: string;
   value: number;
-  // для совместимости с ChartDataInput в Recharts
   [k: string]: string | number;
 }
 
@@ -36,13 +35,13 @@ export const DecisionsChartCard = ({ data, isLoading }: DecisionsChartCardProps)
             Нет данных за выбранный период.
           </Typography>
         ) : (
-          <ResponsiveContainer width='100%' height='100%'>
-            <PieChart>
+          <ResponsiveContainer width='100%' height={240}>
+            <PieChart margin={{ top: 8, right: 16, bottom: 8, left: 16 }}>
               <Pie
                 data={data}
                 dataKey='value'
                 nameKey='name'
-                outerRadius='80%'
+                outerRadius='70%'
                 label={(props: PieLabelRenderProps) => {
                   const name = props.name ?? '';
                   const value =

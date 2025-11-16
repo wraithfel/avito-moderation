@@ -24,7 +24,7 @@ export const CategoriesChartCard = ({ data, isLoading }: CategoriesChartCardProp
             Нет данных за выбранный период.
           </Typography>
         ) : (
-          <ResponsiveContainer width='100%' height='100%'>
+          <ResponsiveContainer width='100%' height={240}>
             <BarChart
               data={data}
               layout='vertical'
@@ -32,7 +32,7 @@ export const CategoriesChartCard = ({ data, isLoading }: CategoriesChartCardProp
             >
               <CartesianGrid strokeDasharray='3 3' />
               <XAxis type='number' allowDecimals={false} />
-              <YAxis type='category' dataKey='name' width={100} />
+              <YAxis type='category' dataKey='name' width={120} />
               <Tooltip />
               <Bar dataKey='value' name='Проверено' fill='rgb(81, 190, 207)' />
             </BarChart>

@@ -1,4 +1,5 @@
-import { Avatar, Skeleton } from '@mui/material';
+import { Avatar, Skeleton, Button } from '@mui/material';
+import { Link, useLocation } from 'react-router-dom';
 
 import { useGetCurrentModerator } from '@/entities/moderator';
 
@@ -7,11 +8,16 @@ import { getInitials } from '@/shared/utils';
 
 const Header = () => {
   const { data: moderator, isLoading, isError } = useGetCurrentModerator();
+  const location = useLocation();
+
+  const isStatsPage = location.pathname.startsWith('/stats');
+  const statsButtonLabel = isStatsPage ? 'На главную' : 'Моя статистика';
+  const statsButtonTo = isStatsPage ? '/list' : '/stats';
 
   return (
     <header className={styles.header}>
       <div className={styles.header__inner}>
-        <div className={styles.header__logo}>
+        <Link to='/list' className={styles.header__logo}>
           <div className={styles.header__logoDots}>
             <span className={`${styles.header__dot} ${styles.header__dot_blue}`} />
             <span className={`${styles.header__dot} ${styles.header__dot_red}`} />
@@ -21,9 +27,20 @@ const Header = () => {
             <span className={styles.header__logoText}>Avito</span>
             <span className={styles.header__logoSub}>Moderation System</span>
           </div>
-        </div>
+        </Link>
 
         <div className={styles.header__moderator}>
+          <Button
+            component={Link}
+            to={statsButtonTo}
+            variant='outlined'
+            size='small'
+            color='primary'
+            className={styles.header__statsButton}
+          >
+            {statsButtonLabel}
+          </Button>
+
           {isLoading && (
             <>
               <Skeleton variant='circular' width={36} height={36} />
