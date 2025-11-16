@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Button,
   Chip,
@@ -20,6 +21,7 @@ import {
   SORT_ORDER_OPTIONS,
   CATEGORY_OPTIONS,
 } from '../model/constants';
+import { useFilterPresets } from '../model';
 
 import styles from './ad-filters.module.scss';
 
@@ -31,6 +33,10 @@ const AdFilters = ({
   categories,
   searchInputRef,
 }: AdFiltersProps) => {
+  const { presets, savePreset, deletePreset } = useFilterPresets();
+  const [presetName, setPresetName] = useState('');
+  const [selectedPresetId, setSelectedPresetId] = useState<string>('');
+
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChange({ search: event.target.value });
   };
@@ -85,6 +91,29 @@ const AdFilters = ({
     (filters.maxPrice !== null ? 1 : 0);
 
   const categoryOptions = categories ?? CATEGORY_OPTIONS;
+
+  const handleSavePreset = () => {
+    const name = presetName.trim();
+    if (!name) return;
+    savePreset(name, filters);
+    setPresetName('');
+  };
+
+  const handlePresetSelectChange = (event: SelectChangeEvent<string>) => {
+    const value = event.target.value;
+    setSelectedPresetId(value);
+
+    const preset = presets.find((p) => p.id === value);
+    if (preset) {
+      onChange(preset.filters);
+    }
+  };
+
+  const handleDeletePreset = () => {
+    if (!selectedPresetId) return;
+    deletePreset(selectedPresetId);
+    setSelectedPresetId('');
+  };
 
   return (
     <section className={styles.filters} aria-label='Фильтры объявлений'>
@@ -218,6 +247,58 @@ const AdFilters = ({
             Сбросить фильтры
           </Button>
         </div>
+      </div>
+
+      {/* Presets */}
+      <div className={styles.filters__presets}>
+        <FormControl size='small' sx={{ minWidth: 200 }}>
+          <InputLabel id='preset-label' htmlFor='preset-select'>
+            Сохранённый набор
+          </InputLabel>
+          <Select
+            id='preset-select'
+            name='presetId'
+            labelId='preset-label'
+            label='Сохранённый набор'
+            value={selectedPresetId}
+            onChange={handlePresetSelectChange}
+          >
+            <MenuItem value=''>
+              <em>Не выбран</em>
+            </MenuItem>
+            {presets.map((preset) => (
+              <MenuItem key={preset.id} value={preset.id}>
+                {preset.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <TextField
+          size='small'
+          label='Название набора'
+          value={presetName}
+          onChange={(e) => setPresetName(e.target.value)}
+        />
+
+        <Button
+          size='small'
+          variant='outlined'
+          onClick={handleSavePreset}
+          disabled={!presetName.trim()}
+        >
+          Сохранить набор
+        </Button>
+
+        <Button
+          size='small'
+          variant='text'
+          color='inherit'
+          onClick={handleDeletePreset}
+          disabled={!selectedPresetId}
+        >
+          Удалить
+        </Button>
       </div>
     </section>
   );

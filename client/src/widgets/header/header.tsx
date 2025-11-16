@@ -1,10 +1,12 @@
-import { Avatar, Skeleton, Button } from '@mui/material';
+import { Avatar, Skeleton, Button, IconButton, Tooltip } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
 
 import { useGetCurrentModerator } from '@/entities/moderator';
 
 import styles from './header.module.scss';
 import { getInitials } from '@/shared/utils';
+import { useAppTheme } from '@app/providers';
+import { DarkMode, LightMode } from '@mui/icons-material';
 
 const Header = () => {
   const { data: moderator, isLoading, isError } = useGetCurrentModerator();
@@ -13,6 +15,9 @@ const Header = () => {
   const isStatsPage = location.pathname.startsWith('/stats');
   const statsButtonLabel = isStatsPage ? 'На главную' : 'Моя статистика';
   const statsButtonTo = isStatsPage ? '/list' : '/stats';
+
+  const { mode, toggleMode } = useAppTheme();
+  const themeToggleLabel = mode === 'dark' ? 'Светлая тема' : 'Тёмная тема';
 
   return (
     <header className={styles.header}>
@@ -40,6 +45,17 @@ const Header = () => {
           >
             {statsButtonLabel}
           </Button>
+
+          <Tooltip title={themeToggleLabel}>
+            <IconButton
+              size='small'
+              color='inherit'
+              aria-label={themeToggleLabel}
+              onClick={toggleMode}
+            >
+              {mode === 'dark' ? <LightMode fontSize='small' /> : <DarkMode fontSize='small' />}
+            </IconButton>
+          </Tooltip>
 
           {isLoading && (
             <>

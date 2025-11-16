@@ -1,39 +1,39 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Alert,
-  Box,
-  CircularProgress,
-  Stack,
-  Typography,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  FormControl,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  TextField,
-  Button,
-} from '@mui/material';
+import { Alert, Box, CircularProgress, Stack, Typography } from '@mui/material';
 import { useQueryClient } from '@tanstack/react-query';
+import { useSearchParams } from 'react-router-dom';
 
 import { AdCard, adQueries, useGetAds } from '@/entities/ad';
-import { AdFilters, useAdsFilters, mapFiltersToParams } from '@/features/ad-filters';
+import {
+  AdFilters,
+  useAdsFilters,
+  mapFiltersToParams,
+  type AdsFilters,
+} from '@/features/ad-filters';
 import { AdsPagination } from '@/features/ad-pagination';
 import { useAdSelection, BulkSelectionBar } from '@/features/ad-selection';
 import { api } from '@/shared/api';
 import type { ModerationResponse, ModerationPayload } from '@/entities/ad';
-import { MODERATION_REASONS } from '@widgets/ad-detail-widget/model/constants';
 import type { ModerationReason } from '@widgets/ad-detail-widget/model/types';
+
+import { BulkRejectDialog } from './bulk-reject-dialog';
+import { filtersFromSearchParams, buildSearchParams } from '../model/url-filters';
 
 import styles from './ads-list-widget.module.scss';
 
 const PAGE_LIMIT = 10;
 
 const AdsListWidget = () => {
-  const [page, setPage] = useState(1);
-  const { filters, setFilters, resetFilters } = useAdsFilters();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const initialState = useMemo(
+    () => filtersFromSearchParams(searchParams as unknown as URLSearchParams),
+    [searchParams],
+  );
+
+  const [page, setPage] = useState(initialState.page);
+  const { filters, setFilters, resetFilters } = useAdsFilters(initialState.filters as AdsFilters);
+
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const queryClient = useQueryClient();
   const { selectedIds, setSelected, reset: resetSelection, isSelected } = useAdSelection();
@@ -42,6 +42,11 @@ const AdsListWidget = () => {
   const [isBulkDialogOpen, setIsBulkDialogOpen] = useState(false);
   const [bulkReason, setBulkReason] = useState<ModerationReason>('Запрещенный товар');
   const [bulkComment, setBulkComment] = useState('');
+
+  useEffect(() => {
+    const params = buildSearchParams(filters, page);
+    setSearchParams(params, { replace: true });
+  }, [filters, page, setSearchParams]);
 
   const params = useMemo(() => mapFiltersToParams(filters, page, PAGE_LIMIT), [filters, page]);
 
@@ -55,7 +60,7 @@ const AdsListWidget = () => {
   const startItem = totalItems === 0 ? 0 : (page - 1) * itemsPerPage + 1;
   const endItem = totalItems === 0 ? 0 : Math.min(page * itemsPerPage, totalItems);
 
-  const handleFiltersChange = (patch: Partial<typeof filters>) => {
+  const handleFiltersChange = (patch: Partial<AdsFilters>) => {
     setFilters({ ...filters, ...patch });
     setPage(1);
     resetSelection();
@@ -276,62 +281,17 @@ const AdsListWidget = () => {
         </>
       )}
 
-      <Dialog
+      <BulkRejectDialog
         open={isBulkDialogOpen}
-        onClose={() => !isBulkLoading && setIsBulkDialogOpen(false)}
-        fullWidth
-        maxWidth='sm'
-      >
-        <DialogTitle>Отклонить выбранные объявления</DialogTitle>
-        <DialogContent>
-          <Typography variant='body2' sx={{ mb: 1 }}>
-            Вы выбрали {selectedIds.length} объявлений. Укажите причину отклонения и комментарий —
-            он будет применён ко всем выбранным объявлениям.
-          </Typography>
-
-          <FormControl component='fieldset' sx={{ mt: 1 }}>
-            <RadioGroup
-              value={bulkReason}
-              onChange={(e) => setBulkReason(e.target.value as ModerationReason)}
-            >
-              {MODERATION_REASONS.map((reason) => (
-                <FormControlLabel
-                  key={reason}
-                  value={reason}
-                  control={<Radio size='small' />}
-                  label={reason}
-                />
-              ))}
-            </RadioGroup>
-          </FormControl>
-
-          <TextField
-            id='bulk-moderation-comment'
-            name='bulkModerationComment'
-            sx={{ mt: 2 }}
-            fullWidth
-            multiline
-            minRows={3}
-            label='Комментарий для продавца (обязательно)'
-            required
-            value={bulkComment}
-            onChange={(e) => setBulkComment(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setIsBulkDialogOpen(false)} disabled={isBulkLoading}>
-            Отмена
-          </Button>
-          <Button
-            onClick={() => void handleBulkRejectConfirm()}
-            variant='contained'
-            color='error'
-            disabled={isBulkLoading || !bulkComment.trim()}
-          >
-            Отклонить {selectedIds.length}
-          </Button>
-        </DialogActions>
-      </Dialog>
+        count={selectedIds.length}
+        isLoading={isBulkLoading}
+        reason={bulkReason}
+        comment={bulkComment}
+        onReasonChange={setBulkReason}
+        onCommentChange={setBulkComment}
+        onClose={() => setIsBulkDialogOpen(false)}
+        onConfirm={() => void handleBulkRejectConfirm()}
+      />
     </section>
   );
 };
