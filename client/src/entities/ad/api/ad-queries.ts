@@ -9,7 +9,7 @@ export const adQueries = {
   list: (params: AdsListParams) =>
     queryOptions({
       queryKey: [...adQueries.all(), 'list', params],
-      queryFn: () => AdApiService.getAds(params),
+      queryFn: ({ signal }) => AdApiService.getAds(params, signal),
       placeholderData: keepPreviousData,
       staleTime: 60 * 1000,
     }),
@@ -17,7 +17,7 @@ export const adQueries = {
   byId: (id: number) =>
     queryOptions({
       queryKey: [...adQueries.all(), 'detail', id],
-      queryFn: () => AdApiService.getAdById(id),
+      queryFn: ({ signal }) => AdApiService.getAdById(id, signal),
       staleTime: 60 * 1000,
     }),
 };

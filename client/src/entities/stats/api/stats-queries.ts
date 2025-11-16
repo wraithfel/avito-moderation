@@ -8,7 +8,7 @@ export const statsQueries = {
   summary: (period: StatsPeriod) =>
     queryOptions({
       queryKey: [...statsQueries.all(), 'summary', period],
-      queryFn: () => StatsApiService.getSummary(period),
+      queryFn: ({ signal }) => StatsApiService.getSummary(period, signal),
       placeholderData: keepPreviousData,
       staleTime: 60 * 1000,
     }),
@@ -16,7 +16,7 @@ export const statsQueries = {
   activity: (period: StatsPeriod) =>
     queryOptions({
       queryKey: [...statsQueries.all(), 'activity', period],
-      queryFn: () => StatsApiService.getActivityChart(period),
+      queryFn: ({ signal }) => StatsApiService.getActivityChart(period, signal),
       placeholderData: keepPreviousData,
       staleTime: 60 * 1000,
     }),
@@ -24,7 +24,7 @@ export const statsQueries = {
   decisions: (period: StatsPeriod) =>
     queryOptions({
       queryKey: [...statsQueries.all(), 'decisions', period],
-      queryFn: () => StatsApiService.getDecisionsChart(period),
+      queryFn: ({ signal }) => StatsApiService.getDecisionsChart(period, signal),
       placeholderData: keepPreviousData,
       staleTime: 60 * 1000,
     }),
@@ -32,7 +32,7 @@ export const statsQueries = {
   categories: (period: StatsPeriod) =>
     queryOptions({
       queryKey: [...statsQueries.all(), 'categories', period],
-      queryFn: () => StatsApiService.getCategoriesChart(period),
+      queryFn: ({ signal }) => StatsApiService.getCategoriesChart(period, signal),
       placeholderData: keepPreviousData,
       staleTime: 60 * 1000,
     }),

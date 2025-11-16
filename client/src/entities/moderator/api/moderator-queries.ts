@@ -8,7 +8,7 @@ export const moderatorQueries = {
   current: () =>
     queryOptions({
       queryKey: [...moderatorQueries.all(), 'current'],
-      queryFn: () => ModeratorApiService.getCurrentModerator(),
+      queryFn: ({ signal }) => ModeratorApiService.getCurrentModerator(signal),
       placeholderData: keepPreviousData,
       staleTime: 60 * 1000,
     }),
